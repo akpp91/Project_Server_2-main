@@ -85,6 +85,42 @@ router.get("/user_reservations/:userId", logRequest, (req, res) => {
   });
 });
 
+//fragemnt booking detail click - tested
+
+router.get("/user_reservation/:userId/:reservationId", logRequest, (req, res) => {
+  const userId = req.params.userId;
+  const reservationId = req.params.reservationId;
+
+  const query = `
+    SELECT R.reservation_id, R.check_in_date, R.check_out_date,
+           R.room_number, RT.room_type, C.confirmation_id,
+           C.amount, C.payment_date
+    FROM Reservation AS R
+    JOIN Room AS RT ON R.room_number = RT.room_number
+    LEFT JOIN Confirmation AS C ON R.reservation_id = C.reservation_id
+    WHERE R.user_id = ? AND R.reservation_id = ? AND
+          R.check_in_date IS NOT NULL AND
+          R.check_out_date IS NOT NULL AND
+          RT.room_type IS NOT NULL AND
+          C.confirmation_id IS NOT NULL AND
+          C.amount IS NOT NULL AND
+          C.payment_date IS NOT NULL;
+  `;
+
+  db.query(query, [userId, reservationId], (error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ status: "error", error: "Failed to retrieve reservation details" });
+    } else {
+      console.log("Response Data:", result);
+      if (result.length === 0) {
+        res.status(404).json({ status: "not_found", error: "Reservation not found" });
+      } else {
+        res.json({ status: "success", data: result });
+      }
+    }
+  });
+});
 
 
 module.exports = router
