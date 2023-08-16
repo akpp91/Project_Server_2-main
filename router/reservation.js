@@ -85,15 +85,14 @@ router.get("/user_reservations/:userId", logRequest, (req, res) => {
   });
 });
 
-//fragemnt booking detail click - tested
-
+// get confirmed reservations = tested
 router.get("/user_reservation/:userId/:reservationId", logRequest, (req, res) => {
   const userId = req.params.userId;
   const reservationId = req.params.reservationId;
 
   const query = `
     SELECT R.reservation_id, R.check_in_date, R.check_out_date,
-           R.room_number, RT.room_type, C.confirmation_id,
+           R.room_number, RT.room_type, RT.images, C.confirmation_id,
            C.amount, C.payment_date
     FROM Reservation AS R
     JOIN Room AS RT ON R.room_number = RT.room_number
@@ -102,6 +101,7 @@ router.get("/user_reservation/:userId/:reservationId", logRequest, (req, res) =>
           R.check_in_date IS NOT NULL AND
           R.check_out_date IS NOT NULL AND
           RT.room_type IS NOT NULL AND
+          RT.images IS NOT NULL AND
           C.confirmation_id IS NOT NULL AND
           C.amount IS NOT NULL AND
           C.payment_date IS NOT NULL;

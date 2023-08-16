@@ -6,6 +6,12 @@ const utils = require("../utils")
 
 const router = express.Router()
 
+// Middleware function to log request details
+function logRequest(req, res, next) {
+  console.log(`Received ${req.method} request to ${req.path}`);
+  console.log("Request Body:", req.body);
+  next();
+}
 
 router.post("/register", (request, response) => {
   const { firstName, lastName, email, phoneNumber, password } = request.body;
@@ -46,17 +52,15 @@ router.get("/all", (request, response) => {
   });
 });
 
-// User Profile Retrieval-done testing
-router.get("/:id", (req, res) => {
+// User Profile Retrieval
+router.get("/:id", logRequest , (req, res) => {
   console.log("inside get of profile Retrival");
   const userId = req.params.id;
   
   console.log(userId);
 
   const statement = `
-    SELECT user_id, firstName, lastName, email, phoneNumber
-    FROM User
-    WHERE user_id = ?
+  select * from User where user_id = ?
   `;
 
   db.query(statement, [userId], (error, result) => {
@@ -77,7 +81,7 @@ router.get("/:id", (req, res) => {
 
 
 // User Profile Update - testing done
-router.put("/update/:id", (req, res) => {
+router.put("/update/:id", logRequest, (req, res) => {
   console.log("inside User Profile Update");
 
   const userId = req.params.id;
@@ -104,6 +108,10 @@ router.put("/update/:id", (req, res) => {
 });
 
 
-
+// request to update password
+router.post("/update_password", logRequest, (request ,response) =>
+{
+  CSSTransformValue.log
+});
 
 module.exports = router
