@@ -81,7 +81,8 @@ router.get("/:id", logRequest , (req, res) => {
 
 
 // User Profile Update - testing done
-router.put("/update/:id", logRequest, (req, res) => {
+router.put("/update/:id", logRequest, (req, res) => 
+{
   console.log("inside User Profile Update");
 
   const userId = req.params.id;
@@ -105,13 +106,38 @@ router.put("/update/:id", logRequest, (req, res) => {
       }
     }
   });
+
+
 });
 
 
-// request to update password
-router.post("/update_password", logRequest, (request ,response) =>
-{
-  CSSTransformValue.log
+// Request to update password
+router.put("/change_password/:id", logRequest, (req, resp) => {
+  console.log("inside change password");
+  console.log("inside change password");
+
+  const user_id = req.params.id;
+  const { password } = req.body;
+
+  const statement = `
+    UPDATE User
+    SET password = ?
+    WHERE user_id = ?
+  `; 
+ 
+  db.query(statement, [password, user_id], (error, result) => {
+    if (error) {
+      resp.status(500).json({ status: "error", error: "Failed to update user's password" });
+    } else {
+      if (result.affectedRows > 0) {
+        resp.json({ status: "success", message: "Password updated successfully" });
+      } else {
+        resp.status(404).json({ status: "error", error: "User not found" }); 
+      }
+    }
+  });
 });
+ 
+
 
 module.exports = router
