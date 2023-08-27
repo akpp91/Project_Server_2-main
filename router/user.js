@@ -11,13 +11,12 @@ function logRequest(req, res, next) {
   console.log(`Received ${req.method} request to ${req.path}`);
   console.log("Request Body:", req.body);
   next();
-}
+} 
 
 router.post("/register", (request, response) => {
-  const { firstName, lastName, email, phoneNumber, password } = request.body;
-  const role = "user"; // Assuming a default role of "user"
+  const { firstName, lastName, email, phoneNumber, password ,role} = request.body;
 
-  console.log("First Name:", firstName,lastName, email, phoneNumber, password );
+  console.log("First Name:", firstName,lastName, email, phoneNumber, password ,role);
   db.query(
     "INSERT INTO User (firstName, lastName, Role, email, phoneNumber, password) VALUES (?, ?, ?, ?, ?, ?)",
     [firstName, lastName, role, email, phoneNumber, password],
@@ -26,6 +25,7 @@ router.post("/register", (request, response) => {
     }
   );
 });
+
 //login user- mobile 
 router.post("/login/mobile", (request, response) => {
   const { email, password } = request.body
@@ -42,18 +42,30 @@ router.post("/login/mobile", (request, response) => {
   })
 })
 
+
 router.post("/login", (request, response) => {
   const { email, password } = request.body
-  const statement = "SELECT * FROM User WHERE email=? and password=?"
-  console.log(email);
-  console.log(password);
 
-  db.query(statement, [email, password], (error, result) => {
-    console.log(result);
-    console.log(error);
+  
 
-    response.send(utils
-      .createResult(error, result))
+  const statement = 'SELECT * FROM User WHERE email=? and password=?'
+  db.query(statement, [email, password], (error, users) => {
+    if (users.length == 0) {
+      // if user does not exist, users array will be empty
+      response.send(utils.createResult('user does not exist'))
+    } else {
+      // if user exists, the users will be an array with one user entry
+      const user = users[0]
+
+      response.send(
+        utils.createResult(null, {
+          name: `${user['firstName']} ${user['lastName']}`,
+          Role  : user['Role'],
+         userId : user['user_id']
+          
+        })
+      )
+    }
   })
 })
 
@@ -75,9 +87,7 @@ router.get("/:id", logRequest , (req, res) => {
   console.log(userId);
 
   const statement = `
-    SELECT user_id, firstName, lastName, email, phoneNumber
-    FROM User
-    WHERE user_id = ?
+  select * from User where user_id = ?
   `;
 
   db.query(statement, [userId], (error, result) => {
@@ -98,6 +108,8 @@ router.get("/:id", logRequest , (req, res) => {
 
 
 // User Profile Update - testing done
+router.put("/update/:id", logRequest, (req, res) => 
+{
   console.log("inside User Profile Update");
 
   const userId = req.params.id;
@@ -121,6 +133,9 @@ router.get("/:id", logRequest , (req, res) => {
       }
     }
   });
+
+
+});
 
 
 // Request to update password
@@ -149,6 +164,8 @@ router.put("/change_password/:id", logRequest, (req, resp) => {
     }
   });
 });
+ 
+
 // Delete User - testing done
 router.delete("/:id", logRequest, (req, res) => {
   console.log("inside Delete User");
@@ -172,4 +189,6 @@ router.delete("/:id", logRequest, (req, res) => {
     }
   });
 });
+
+
 module.exports = router
