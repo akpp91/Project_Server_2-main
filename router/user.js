@@ -59,8 +59,6 @@ router.get("/all", (request, response) => {
 // User Profile Retrieval
 router.get("/:id", logRequest , (req, res) => {
 =======
-// User Profile Retrieval-done testing
-router.get("/:id", (req, res) => {
 >>>>>>> 98521b4 (server 2 android)
   console.log("inside get of profile Retrival");
   const userId = req.params.id;
@@ -69,7 +67,7 @@ router.get("/:id", (req, res) => {
 
   const statement = `
 <<<<<<< HEAD
-  select * from User where user_id = ?
+
 =======
     SELECT user_id, firstName, lastName, email, phoneNumber
     FROM User
@@ -99,7 +97,7 @@ router.get("/:id", (req, res) => {
 router.put("/update/:id", logRequest, (req, res) => 
 {
 =======
-router.put("/update/:id", (req, res) => {
+
 >>>>>>> 98521b4 (server 2 android)
   console.log("inside User Profile Update");
 
@@ -158,7 +156,6 @@ router.put("/change_password/:id", logRequest, (req, resp) => {
 });
  
 =======
-});
 
 
 >>>>>>> 98521b4 (server 2 android)
