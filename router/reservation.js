@@ -85,6 +85,7 @@ router.get("/user_reservations/:userId", logRequest, (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 // get confirmed reservations = tested
 router.get("/user_reservation/:userId/:reservationId", logRequest, (req, res) => {
   const userId = req.params.userId;
@@ -121,6 +122,8 @@ router.get("/user_reservation/:userId/:reservationId", logRequest, (req, res) =>
     }
   });
 });
+=======
+>>>>>>> 98521b4 (server 2 android)
 
 
 module.exports = router
