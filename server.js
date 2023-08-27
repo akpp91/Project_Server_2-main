@@ -8,7 +8,7 @@ const routerconfirmation = require("./router/confirmations")
 const routerreservation = require("./router/reservation")
 <<<<<<< HEAD
 const routerfeedback = require("./router/feedback")
-=======
+======= 
 >>>>>>> 98521b4 (server 2 android)
 
 const app = express()
