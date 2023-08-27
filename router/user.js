@@ -6,15 +6,12 @@ const utils = require("../utils")
 
 const router = express.Router()
 
-<<<<<<< HEAD
 // Middleware function to log request details
 function logRequest(req, res, next) {
   console.log(`Received ${req.method} request to ${req.path}`);
   console.log("Request Body:", req.body);
   next();
 }
-=======
->>>>>>> 98521b4 (server 2 android)
 
 router.post("/register", (request, response) => {
   const { firstName, lastName, email, phoneNumber, password } = request.body;
@@ -55,24 +52,17 @@ router.get("/all", (request, response) => {
   });
 });
 
-<<<<<<< HEAD
 // User Profile Retrieval
 router.get("/:id", logRequest , (req, res) => {
-=======
->>>>>>> 98521b4 (server 2 android)
   console.log("inside get of profile Retrival");
   const userId = req.params.id;
   
   console.log(userId);
 
   const statement = `
-<<<<<<< HEAD
-
-=======
     SELECT user_id, firstName, lastName, email, phoneNumber
     FROM User
     WHERE user_id = ?
->>>>>>> 98521b4 (server 2 android)
   `;
 
   db.query(statement, [userId], (error, result) => {
@@ -93,12 +83,6 @@ router.get("/:id", logRequest , (req, res) => {
 
 
 // User Profile Update - testing done
-<<<<<<< HEAD
-router.put("/update/:id", logRequest, (req, res) => 
-{
-=======
-
->>>>>>> 98521b4 (server 2 android)
   console.log("inside User Profile Update");
 
   const userId = req.params.id;
@@ -122,43 +106,8 @@ router.put("/update/:id", logRequest, (req, res) =>
       }
     }
   });
-<<<<<<< HEAD
 
 
-});
-
-
-// Request to update password
-router.put("/change_password/:id", logRequest, (req, resp) => {
-  console.log("inside change password");
-  console.log("inside change password");
-
-  const user_id = req.params.id;
-  const { password } = req.body;
-
-  const statement = `
-    UPDATE User
-    SET password = ?
-    WHERE user_id = ?
-  `; 
- 
-  db.query(statement, [password, user_id], (error, result) => {
-    if (error) {
-      resp.status(500).json({ status: "error", error: "Failed to update user's password" });
-    } else {
-      if (result.affectedRows > 0) {
-        resp.json({ status: "success", message: "Password updated successfully" });
-      } else {
-        resp.status(404).json({ status: "error", error: "User not found" }); 
-      }
-    }
-  });
-});
- 
-=======
-
-
->>>>>>> 98521b4 (server 2 android)
 
 
 module.exports = router
