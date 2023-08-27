@@ -129,4 +129,22 @@ console.log(roomId)
   });
 });
 
+router.get("/:room_number", (req, res) => {
+  const roomNumber = req.params.room_number;
+
+  const statement = `SELECT * FROM Room WHERE room_number = ?`;
+  db.query(statement, [roomNumber], (error, result) => {
+    if (error) {
+      res.status(500).json({ status: "error", error: "Failed to retrieve room details" });
+    } else {
+      if (result.length === 0) {
+        res.status(404).json({ status: "error", error: "Room not found" });
+      } else {
+        const roomDetails = result[0];
+        res.json({ status: "success", data: roomDetails });
+      }
+    }
+  });
+});
+
 module.exports = router
