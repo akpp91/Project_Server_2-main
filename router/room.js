@@ -13,7 +13,8 @@ router.get("/getAllRooms", (request, response) => {
 })
 
 // API endpoint to check room availability - TSETED
-router.get('/availability', (req, res) => {
+router.post('/availability', (req, res) => {
+  console.log(req.body)
   const { checkInDate, checkOutDate, roomType, capacity } = req.body;
   console.log(checkInDate, checkOutDate, roomType, capacity);
   const query = `
