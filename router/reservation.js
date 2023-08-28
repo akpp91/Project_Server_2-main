@@ -12,20 +12,33 @@ function logRequest(req, res, next) {
 }
 
 //see all Booking -TSETED
-
 router.get("/bookings", (req, res) => {
-    const query = "SELECT * FROM Reservation";
-    db.query(query, (error, result) => {
-      if (error) 
-      {
-        console.log(error);
-
-        res.status(500).json({ status: "error", error: "Failed to retrieve reservations" });
-      } else {
-        res.json({ status: "success", data: result });
-      }
-    });
+  const query = `
+  SELECT R.*, RT.images, U.firstName, U.lastName
+  FROM Reservation AS R
+  JOIN Room AS RT ON R.room_number = RT.room_number
+  JOIN User AS U ON R.user_id = U.user_id
+  LEFT JOIN Confirmation AS C ON R.reservation_id = C.reservation_id
+  WHERE C.reservation_id IS NULL;
+  
+  `;
+  
+  db.query(query, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ status: "error", error: "Failed to retrieve reservations" });
+    } else {
+      // Include the image name from the Room table in the response
+      const bookingsWithImagesAndNames = result.map(booking => ({
+        ...booking,
+        image: booking.images
+      }));
+      
+      res.json({ status: "success", data: bookingsWithImagesAndNames });
+    }
   });
+});
+
 
 
 //Book a hotel room -TSETED
