@@ -11,6 +11,33 @@ function logRequest(req, res, next) {
   next();
 }
 
+
+// Endpoint to retrieve unconfirmed reservations
+router.get('/bookings_unconfirmed', (req, res) => {
+  const query = `
+    SELECT R.*, RT.images, U.firstName, U.lastName
+    FROM Reservation AS R
+    JOIN Room AS RT ON R.room_number = RT.room_number
+    JOIN User AS U ON R.user_id = U.user_id
+    LEFT JOIN Confirmation AS C ON R.reservation_id = C.reservation_id
+    WHERE C.reservation_id IS NULL;
+  `;
+
+  db.query(query, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ status: 'error', error: 'Failed to retrieve reservations' });
+    } else {
+      const bookingsWithImagesAndNames = result.map(booking => ({
+        ...booking,
+        image: booking.images
+      }));
+
+      res.json({ status: 'success', data: bookingsWithImagesAndNames });
+    }
+  });
+});
+
 //see all Booking -TSETED
 router.get("/bookings", (req, res) => {
   const query = `
