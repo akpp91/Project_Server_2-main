@@ -48,4 +48,23 @@ router.get("/", (req, res) => {
     });
   });
   
+  
+  // Cancel a reservation
+router.delete("/cancel/:confirmationId", (req, res) => {
+    const confirmationId = req.params.confirmationId;
+    const query = `DELETE FROM Confirmation WHERE confirmation_id = ?`;
+    db.query(query, [confirmationId], (error, result) => {
+        if (error) {
+            res.status(500).json({ status: "error", error: "Failed to cancel reservation" });
+        } else {
+            if (result.affectedRows === 0) {
+                res.status(404).json({ status: "error", error: "Confirmation not found" });
+            } else {
+                res.json({ status: "success", message: "Reservation cancelled successfully" });
+            }
+        }
+    });
+});
+
+
 module.exports = router
