@@ -1,11 +1,11 @@
--- Drop tables if they exist
+
 DROP TABLE IF EXISTS Feedback;
 DROP TABLE IF EXISTS Confirmation;
 DROP TABLE IF EXISTS Reservation;
 DROP TABLE IF EXISTS Room;
 DROP TABLE IF EXISTS User;
 
--- Create User table
+
 CREATE TABLE User (
   user_id INT AUTO_INCREMENT PRIMARY KEY,
   firstName VARCHAR(255),
@@ -16,7 +16,7 @@ CREATE TABLE User (
   password VARCHAR(255)
 );
 
--- Create Room table
+
 CREATE TABLE Room (
   room_number INT PRIMARY KEY,
   room_type VARCHAR(255),
@@ -28,7 +28,7 @@ CREATE TABLE Room (
   room_size VARCHAR(255)
 );
 
--- Create Reservation table
+
 CREATE TABLE Reservation (
   reservation_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
@@ -42,7 +42,7 @@ CREATE TABLE Reservation (
 
 
 
--- Create Confirmation table
+
 CREATE TABLE Confirmation (
   confirmation_id INT AUTO_INCREMENT PRIMARY KEY,
   reservation_id INT UNIQUE,
@@ -51,7 +51,7 @@ CREATE TABLE Confirmation (
   FOREIGN KEY (reservation_id) REFERENCES Reservation(reservation_id) ON DELETE CASCADE
 );
 
--- Create Feedback table
+
 CREATE TABLE Feedback (
   feedback_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
